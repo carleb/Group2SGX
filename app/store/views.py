@@ -72,6 +72,15 @@ def edit_product(request, listing_id):
         print(form)
         print(form.is_valid())
         if form.is_valid():
+            if 'image' in request.FILES:
+                image = request.FILES['image']
+                try:
+                    # Open the image file and check if it's a valid image
+                    img = Image.open(image)
+                    img.verify()  # Verify that it's an actual image
+                except Exception:
+                    form.add_error('image', 'Invalid image file')
+                    return render(request, "store/edit_product.html", {"listing": listing, "form": form})
             form.save()
             product = form.save(commit=False)
             product.seller = request.user.email
