@@ -38,9 +38,24 @@
 
             {% if product_name_for_qty %}
 
-            <p> The item with the <b>most number of quantity sold</b> is <b>{{product_name_for_qty}}</b>, at <b>{{total_quantity_sold}}</b> units sold. </p>
+            <p> <h5> The item with the <b>most number of quantity sold</b> is <b>{{product_name_for_qty}}</b>, at <b>{{total_quantity_sold}}</b> units sold.</h5> </p>
 
-            <p> The item that <b>earned the most money</b> is <b>{{product_name_for_price}}</b>, at <b>${{total_amount_sold}}</b> raised. </p>
+            <p> This is followed by: </p>
+            {% for product_info in top_products_info_by_qty %}
+                <p>
+                    {{ product_info.product_name_for_qty }}, {{ product_info.total_quantity_sold }} units sold.
+                </p>
+            {% endfor %}
+
+            <p> <h5> The item that <b>earned the most money</b> is <b>{{product_name_for_price}}</b>, at <b>${{total_amount_sold}}</b> raised. </h5> </p>
+
+            <p> This is followed by: </p>
+            {% for product_info in top_products_info_by_sold %}
+                <p>
+                    {{ product_info.product_name_for_amt_sold }}, ${{ product_info.total_amt_sold }} raised.
+                </p>
+            {% endfor %}
+            
 
             {% else %}
 

@@ -87,7 +87,25 @@ def get_top_items(request):
 
         context.update({'product_name_for_qty': product_name, 
                    'total_quantity_sold': total_quantity_sold})  
+        
+
+
+    top_order_items_by_qty = OrderItem.objects.values('product').annotate(
+        total_quantity_sold=Sum('quantity')
+    ).order_by('-total_quantity_sold')[1:5]
+
+    top_products_info_by_qty = []
+    for item in top_order_items_by_qty:
+        product = OrderItem.objects.filter(product=item['product']).first()
+        if product:
+            top_products_info_by_qty.append({
+                'product_name_for_qty': product.product,
+                'total_quantity_sold': item['total_quantity_sold'],
+            })
+
+    context['top_products_info_by_qty'] = top_products_info_by_qty
      
+
 
     top_order_item_by_amt_raise = OrderItem.objects.values('product').annotate(
         total_amount_sold=Sum(F('price') * F('quantity'))
@@ -100,7 +118,25 @@ def get_top_items(request):
 
         context.update({'product_name_for_price': product_name, 
                    'total_amount_sold': total_amount_sold})
+        
+
+    top_order_item_by_amt_raise = OrderItem.objects.values('product').annotate(
+        total_amount_sold=Sum(F('price') * F('quantity'))
+    ).order_by('-total_amount_sold')[1:5]
+
+    top_products_info_by_sold = []
+    for item in top_order_item_by_amt_raise:
+        product = OrderItem.objects.filter(product=item['product']).first()
+        if product:
+            top_products_info_by_sold.append({
+                'product_name_for_amt_sold': product.product,
+                'total_amt_sold': item['total_amount_sold'],
+            })
+
+    context['top_products_info_by_sold'] = top_products_info_by_sold
     
+    
+
     if len(context):
         return render(request, 'store/sales-report.html', context)
 
