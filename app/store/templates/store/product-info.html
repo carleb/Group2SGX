@@ -76,6 +76,26 @@
                         </div>
 
                     </div>
+                    
+                     <form>
+
+                        <label for="comment">Comment:</label><br>
+                        <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br>
+                        <button type="button" id="add-button" value="{{product.id}}" class="btn btn-secondary btn-sm">
+
+                            Submit
+
+                        </button>
+                        <button type="button" id="add-button" value="{{product.id}}" class="btn btn-secondary btn-sm" onclick="contact(event)">
+
+                            Send Help
+
+                        </button>
+
+                     </form>
+                    
+
+
 
                 </div>
 
@@ -90,6 +110,25 @@
 </div>
 
 <script>
+
+      async function contact(event) {
+      
+      event.preventDefault();
+
+      try {
+        await emailjs.sendForm(
+          "service_t02ht9n",
+          "template_48le9xw",
+          "84s8nGLZJITkN594v"
+        );
+
+      } catch (error) {
+        console.log("error sending email");
+        alert(
+          "The Singapore Exchange's support team has been notified, please wait for further correspondence from them. Thank you for submitting this report!"
+        );
+      }
+    }
 
         // Populate the quantity dropdown based on available quantity
     $(document).ready(function(){
