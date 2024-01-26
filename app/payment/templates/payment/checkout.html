@@ -1,0 +1,151 @@
+
+{% include "store/base.html" %}
+
+
+{% load static %}
+
+
+{% block content %}
+
+<style>
+
+    body
+    {
+
+        background-color: gray;
+
+    }
+
+
+</style>
+
+
+    <body>
+
+        <br>
+
+        <div class="container bg-white shadow-md p-5" style="width:500px; border-radius:20px;">
+
+            <form id="form" onsubmit="event.preventDefault();">
+
+                <div>
+
+                    <h3> <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> &nbsp; Complete your order </h3>
+
+                    <p> Please enter which office will you be located at. </p>
+
+
+
+                    <hr>
+
+                    <br>
+
+
+                    <div class="form-field">
+
+                        <input class="form-control validate" id="office" type="text" placeholder="Vista/Centre*" autocomplete="off" value="{{shipping.office}}" required>
+
+                    </div>
+
+                    <br>
+                        <div class="form-field">
+
+                            <input id="terms" type="checkbox" required >
+                            <label for="terms" class="text-muted">I agree to automatic deduction of my payroll by HR</label>
+                        </div>
+                    </div>
+
+
+
+
+                <br>
+
+
+
+               <button id="complete-order" class="btn btn-primary navbar-btn text-white"> &nbsp; Complete order </button>
+
+
+                <br>
+                </div>
+
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <br>
+
+
+    </body>
+
+
+    <!-- Ajax integration -->
+
+
+
+    <script>
+
+    // Total price
+
+    var total_price = '{{cart.get_total}}';
+
+
+
+
+    // Complete checkout
+
+
+    $(document).on('submit',  function(e){
+
+        e.preventDefault();
+
+        $.ajax({
+
+            type: 'POST',
+            url: '{% url "complete-order" %}',
+            data: {
+
+                name: $('#name').val(),
+                email: $('#email').val(),
+
+                office: $('#office').val(),
+
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+
+            },
+
+            success: function(json){
+
+                //console.log(json)
+
+                window.location.replace("{% url 'payment-success' %}");
+
+
+            },
+
+            error: function(xhr, errmsg, err){
+
+                window.location.replace("{% url 'payment-failed' %}");
+
+            }
+
+        });
+
+
+    })
+
+
+
+
+   </script>
+
+
+
+
+
+{% endblock %}

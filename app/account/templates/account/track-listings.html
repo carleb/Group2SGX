@@ -1,0 +1,83 @@
+
+{% include "store/base.html" %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+    <style>
+
+
+        body{
+
+
+            background-color: gray;
+
+        }
+
+
+    </style>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout ">
+
+        <h3> <i class="fa fa-list-alt" aria-hidden="true"></i> &nbsp; My Listings </h3>
+
+        <p> View all of your listings. </p>
+
+        <hr>
+
+
+    </div>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+        {% if listings %}
+            {% for listing in listings %}
+            <div class="row mb-4 border listing-item">
+                <!-- <div class="col-md-3 col-lg-2 order-md-first bg-light">
+
+                    <img class="img-fluid mx-auto d-block" width="200px" alt="Responsive image" src="{{listing.image.url}}">
+
+                </div> -->
+
+                <div class="col-md-5 col-lg-5 order-md-first bg-light">
+
+                    <img class="img-fluid mx-auto d-block" alt="image" src="{{listing.image.url}}">
+
+                </div>
+
+                <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5">
+
+                    <h1 class="mb-0 h1"> {{listing.title}} </h1>
+
+                    <strong> {{listing.brand}}</strong>
+                    <br/><br/>
+                    <h5 class="mb-0 h5">Description : {{listing.description}} </h5> <br/>
+                    <h5 class="mb-0 h5">Listed Quantity : {{listing.quantity}} </h5> <br/>
+                    <h5 class="mb-0 h5">Listed Price: {{listing.price}} </h5> <br/>
+
+                    <br/>
+                    <!-- Add a delete button -->
+                    <form method="post" action="{% url 'delete_listing' listing.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No listings found.</p>
+        {% endif %}
+    </div>
+
+    <br>
+
+
+
+{% endblock %}
