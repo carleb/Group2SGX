@@ -10,6 +10,10 @@ from django.contrib.auth.decorators import login_required
 
 from PIL import Image
 
+from payment.models import OrderItem
+
+from django.db.models import Sum
+
 
 def store(request):
 
@@ -67,7 +71,22 @@ def upload_product(request):
 
 
 
+def get_top_item_by_qty(request):
 
+    top_order_item = OrderItem.objects.values('product').annotate(
+        total_quantity_sold=Sum('quantity')
+    ).order_by('-total_quantity_sold').first()
 
+    if top_order_item:
 
+        product_name = OrderItem.objects.filter(product=top_order_item['product'])[0].product
+
+        total_quantity_sold = top_order_item['total_quantity_sold']
+
+        context = {'product_name': product_name, 
+                   'total_quantity_sold': total_quantity_sold}
+
+        return render(request, 'store/sales-report.html', context)
+    else:
+        return render(request, 'store/sales-report.html')
 

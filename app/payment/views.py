@@ -11,6 +11,8 @@ from django.http import JsonResponse
 
 from django.db import transaction
 
+from django.db.models import Sum
+
 
 def checkout(request):
 

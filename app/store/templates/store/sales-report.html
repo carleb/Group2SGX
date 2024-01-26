@@ -1,0 +1,71 @@
+
+{% include "store/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+
+    body{
+
+
+        background-color: gray;
+
+    }
+
+
+
+</style>
+
+<body>
+
+    <br>
+
+    <div class="container bg-white shadow-md p-5 form-layout">
+
+        <div class="text-center">
+            
+            <i class="text-success fa fa-line-chart fa-3x" aria-hidden="true"></i>
+
+            <br> <br>
+   
+
+            <h5> <strong> Sales Report </strong> </h5>
+
+            <hr>
+
+            {% if product_name %}
+
+            <p> The item with the most number of quantity sold is {{product_name}}, at {{total_quantity_sold}} units sold. </p>
+
+            {% else %}
+
+            <p>No products were sold to generate this report.</p>
+
+            {% endif %}
+
+            {% for order_item in items %}
+                <p>
+                    Product: {{ order_item.product }}<br>
+                    Quantity: {{ order_item.quantity }}<br>
+                    Price: ${{ order_item.price }}
+                </p>
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+
+{% endblock %}
+
+
+
+
+
