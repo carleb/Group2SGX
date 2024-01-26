@@ -44,7 +44,7 @@ class Product(models.Model):
     image = models.FileField(upload_to='images/',
     max_length = 5485760 ,
     validators=[
-            FileExtensionValidator(allowed_extensions=['.png', 'jpg'],
+            FileExtensionValidator(allowed_extensions=['png', 'jpg'],
             message="Only png and jpg files are allowed"),
             FileNameLengthValidator(max_length=100),
             FileNameCharValidator(allowed_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-."),
