@@ -1,41 +1,35 @@
 from django.db import models
-
-
+from django.core.validators import FileExtensionValidator
+from django import forms
+from .validators import FileNameLengthValidator, FileNameCharValidator
 from django.urls import reverse
 
 
 class Category(models.Model):
-
     name = models.CharField(max_length=250, db_index=True)
 
     slug = models.SlugField(max_length=250, unique=True)
 
-
     class Meta:
-
-        verbose_name_plural = 'categories'
-
+        verbose_name_plural = "categories"
 
     def __str__(self):
-
         return self.name
 
-
     def get_absolute_url(self):
-
-        return reverse('list-category', args=[self.slug])
-
+        return reverse("list-category", args=[self.slug])
 
 
 class Product(models.Model):
+    # FK
 
-    #FK
-
-    category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(
+        Category, related_name="product", on_delete=models.CASCADE, null=True
+    )
 
     title = models.CharField(max_length=250)
 
-    brand = models.CharField(max_length=250, default='un-branded')
+    brand = models.CharField(max_length=250, default="un-branded")
 
     description = models.TextField(blank=True)
 
@@ -47,12 +41,27 @@ class Product(models.Model):
 
     seller = models.CharField(max_length=250)
 
-    image = models.FileField(upload_to='images/')
+<<<<<<< Updated upstream
+    image = models.FileField(upload_to='images/',
+    max_length = 5485760 ,
+    validators=[
+            FileExtensionValidator(allowed_extensions=['.png', 'jpg'],
+            message="Only png and jpg files are allowed"),
+            FileNameLengthValidator(max_length=100),
+            FileNameCharValidator(allowed_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-."),
+            
+        ])
+=======
+    valid_extensions = ["jpg", "jpeg", "png"]
+>>>>>>> Stashed changes
 
+    image = models.FileField(
+        upload_to="images/",
+        validators=[FileExtensionValidator(allowed_extensions=valid_extensions)],
+    )
 
     class Meta:
-
-        verbose_name_plural = 'products'
+        verbose_name_plural = "products"
 
     def save(self, *args, **kwargs):
         # Ensure the slug is set before saving
@@ -63,14 +72,7 @@ class Product(models.Model):
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
-
         return self.title
 
-
-
     def get_absolute_url(self):
-
-        return reverse('product-info', args=[self.slug])
-
-
-
+        return reverse("product-info", args=[self.slug])
