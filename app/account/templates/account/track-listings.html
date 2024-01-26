@@ -20,7 +20,7 @@
 <br />
 
 <div class="container bg-white shadow-md p-5 form-layout">
-  {% if listings %} {% for listing in listings %}
+  {{listings}} {% if listings %} {% for listing in listings %}
   <div class="row mb-4 border listing-item">
     <!-- <div class="col-md-3 col-lg-2 order-md-first bg-light">
 
@@ -57,6 +57,15 @@
       >
         {% csrf_token %}
         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+
+      <form
+        method="post"
+        class="d-inline"
+        action="{% url 'edit-product' listing.id %}"
+      >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
       </form>
     </div>
   </div>
