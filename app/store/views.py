@@ -54,13 +54,13 @@ def product_info(request, product_slug):
 def upload_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.seller = request.user.email
+        # if form.is_valid():
+        product = form.save(commit=False)
+        product.seller = request.user.email
 
-            form.save()
+        form.save()
 
-            return redirect('store')
+        return redirect('store')
     else:
         form = ProductForm()
     return render(request, 'store/upload_product.html', {'form': form})
