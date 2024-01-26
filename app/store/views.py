@@ -12,7 +12,7 @@ from PIL import Image
 
 from payment.models import OrderItem
 
-from django.db.models import Sum
+from django.db.models import Sum, F, ExpressionWrapper, fields
 
 
 def store(request):
@@ -71,22 +71,39 @@ def upload_product(request):
 
 
 
-def get_top_item_by_qty(request):
+def get_top_items(request):
 
-    top_order_item = OrderItem.objects.values('product').annotate(
+    context = {}
+
+    top_order_item_by_qty = OrderItem.objects.values('product').annotate(
         total_quantity_sold=Sum('quantity')
     ).order_by('-total_quantity_sold').first()
 
-    if top_order_item:
+    if top_order_item_by_qty:
 
-        product_name = OrderItem.objects.filter(product=top_order_item['product'])[0].product
+        product_name = OrderItem.objects.filter(product=top_order_item_by_qty['product'])[0].product
 
-        total_quantity_sold = top_order_item['total_quantity_sold']
+        total_quantity_sold = top_order_item_by_qty['total_quantity_sold']
 
-        context = {'product_name': product_name, 
-                   'total_quantity_sold': total_quantity_sold}
+        context.update({'product_name_for_qty': product_name, 
+                   'total_quantity_sold': total_quantity_sold})  
+     
 
+    top_order_item_by_amt_raise = OrderItem.objects.values('product').annotate(
+        total_amount_sold=Sum(F('price') * F('quantity'))
+    ).order_by('-total_amount_sold').first()
+
+    if top_order_item_by_amt_raise:
+        product_name = OrderItem.objects.filter(product=top_order_item_by_amt_raise['product'])[0].product
+
+        total_amount_sold = top_order_item_by_amt_raise['total_amount_sold']
+
+        context.update({'product_name_for_price': product_name, 
+                   'total_amount_sold': total_amount_sold})
+    
+    if len(context):
         return render(request, 'store/sales-report.html', context)
+
     else:
         return render(request, 'store/sales-report.html')
 

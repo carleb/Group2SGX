@@ -36,9 +36,11 @@
 
             <hr>
 
-            {% if product_name %}
+            {% if product_name_for_qty %}
 
-            <p> The item with the most number of quantity sold is {{product_name}}, at {{total_quantity_sold}} units sold. </p>
+            <p> The item with the <b>most number of quantity sold</b> is <b>{{product_name_for_qty}}</b>, at <b>{{total_quantity_sold}}</b> units sold. </p>
+
+            <p> The item that <b>earned the most money</b> is <b>{{product_name_for_price}}</b>, at <b>${{total_amount_sold}}</b> raised. </p>
 
             {% else %}
 
@@ -46,13 +48,6 @@
 
             {% endif %}
 
-            {% for order_item in items %}
-                <p>
-                    Product: {{ order_item.product }}<br>
-                    Quantity: {{ order_item.quantity }}<br>
-                    Price: ${{ order_item.price }}
-                </p>
-            {% endfor %}
 
         </div>
 

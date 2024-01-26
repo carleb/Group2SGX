@@ -17,7 +17,7 @@ urlpatterns = [
 
     path('store/upload_product' ,views.upload_product, name='upload-product'),
 
-    path('sales/sales_report', views.get_top_item_by_qty, name='sales-report')
+    path('sales/sales_report', views.get_top_items, name='sales-report')
 
 
 ]
