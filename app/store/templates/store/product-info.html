@@ -1,151 +1,138 @@
-
-{% extends "./base.html" %}
-
-{% load static %}
-
-{% block content %}
+{% extends "./base.html" %} {% load static %} {% block content %}
 
 <div class="container">
+  <main class="pt-5">
+    <div class="row g-3">
+      <div class="col-md-5 col-lg-5 order-md-first bg-light">
+        <img
+          class="img-fluid mx-auto d-block"
+          alt="Responsive image"
+          src="{{product.image.url}}"
+        />
+      </div>
 
-    <main class="pt-5">
+      <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5 product-info">
+        <h1 class="mb-0 h4">{{product.title}}</h1>
 
-        <div class="row g-3">
+        <strong> {{product.brand}}</strong>
 
-            <div class="col-md-5 col-lg-5 order-md-first bg-light">
+        <hr />
 
-                <img class="img-fluid mx-auto d-block" alt="Responsive image" src="{{product.image.url}}">
+        <br />
 
+        <p>{{product.description}}</p>
+
+        <div class="border">
+          <div class="col border-bottom">
+            <div class="row p-3">
+              <div class="col-6">Price</div>
+
+              <div class="col-6 text-end">
+                <span class="h4 fw-bold">$ {{product.price}} </span>
+              </div>
             </div>
+          </div>
 
-            <div class="col-md-7 col-lg-7 ps-md-3 ps-lg-5 product-info">
+          <div class="col">
+            <div class="row p-3">
+              <div class="col-6">
+                <label for="select">Qty</label>
 
-                <h1 class="mb-0 h4"> {{product.title}} </h1>
+                &nbsp;
 
-                <strong> {{product.brand}}</strong>
+                <!-- Update the id and class of the select element -->
+                <select
+                  id="select-{{product.id}}"
+                  class="quantity-dropdown"
+                ></select>
+              </div>
 
-                <hr>
-
-                <br>
-
-
-                <p> {{product.description}} </p>
-
-                <div class="border">
-
-                    <div class="col border-bottom">
-
-                        <div class="row p-3">
-
-                            <div class="col-6"> Price </div>
-
-                            <div class="col-6 text-end"><span class="h4 fw-bold">$ {{product.price}} </span></div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col">
-
-                        <div class="row p-3">
-
-                            <div class="col-6">
-
-
-                                <label for="select">Qty</label>
-
-                                &nbsp;
-
-                                <!-- Update the id and class of the select element -->
-                                <select id="select-{{product.id}}" class="quantity-dropdown">
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-6 text-end">
-
-                                <button type="button" id="add-button" value="{{product.id}}" class="btn btn-secondary btn-sm">
-
-                                Add to cart
-
-                                </button>
-
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+              <div class="col-6 text-end">
+                <button
+                  type="button"
+                  id="add-button"
+                  value="{{product.id}}"
+                  class="btn btn-secondary btn-sm"
+                >
+                  Add to cart
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
 
+    <div class="container">
+      <div><h2>you may also like</h2></div>
+      <div class="row">
+        {% for s_product in similar_products %}
+        <div class="col-md-2 mb-6">
+          <a href="../{{ s_product.slug }}" class="card-link">
+            <div class="card">
+              <img
+                src="{{ s_product.image.url }}"
+                alt="Image of {{ s_product.title }}"
+                class="card-img-top"
+                style="height: 200px; object-fit: auto"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ s_product.title }}</h5>
+                <p class="card-text">{{ s_product.price }}</p>
+              </div>
+            </div>
+          </a>
         </div>
 
-    </main>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
 
-    <br>
-
+  <br />
 </div>
 
 <script>
+  // Populate the quantity dropdown based on available quantity
+  $(document).ready(function () {
+    var maxQuantity = "{{ product.quantity }}"
+    var selectElement = $("#select-{{product.id}}")
 
-        // Populate the quantity dropdown based on available quantity
-    $(document).ready(function(){
-        var maxQuantity = "{{ product.quantity }}";
-        var selectElement = $('#select-{{product.id}}');
+    for (var i = 1; i <= maxQuantity; i++) {
+      selectElement.append(
+        $("<option>", {
+          value: i,
+          text: i,
+        })
+      )
+    }
+  })
 
-        for (var i = 1; i <= maxQuantity; i++) {
-            selectElement.append($('<option>', {
-                value: i,
-                text: i
-            }));
-        }
+  // Add button
+
+  $(document).on("click", "#add-button", function (e) {
+    e.preventDefault()
+
+    $.ajax({
+      type: "POST",
+      url: '{% url "cart-add" %}',
+      data: {
+        product_id: $("#add-button").val(),
+        product_quantity: $("#select-{{product.id}} option:selected").text(),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+
+      success: function (json) {
+        console.log(json)
+
+        document.getElementById("cart-qty").textContent = json.qty
+      },
+
+      error: function (xhr, errmsg, err) {},
     })
-
-    // Add button
-
-    $(document).on('click', '#add-button', function(e){
-
-        e.preventDefault();
-
-        $.ajax({
-
-            type: 'POST',
-            url: '{% url "cart-add" %}',
-            data: {
-
-                product_id: $('#add-button').val(),
-                product_quantity: $('#select-{{product.id}} option:selected').text(),
-                csrfmiddlewaretoken: "{{csrf_token}}",
-                action: 'post'
-
-            },
-
-            success: function(json){
-
-                console.log(json)
-
-                document.getElementById("cart-qty").textContent = json.qty
-
-
-            },
-
-            error: function(xhr, errmsg, err){
-
-
-            }
-
-        });
-
-
-    })
-
-
-
-
+  })
 </script>
-
 
 {% endblock %}

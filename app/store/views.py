@@ -45,7 +45,13 @@ def product_info(request, product_slug):
 
     product = get_object_or_404(Product, slug=product_slug)
 
-    context = {'product': product}
+    same_cat = Product.objects.filter(category = product.category)
+    similar_products = []
+    for p in same_cat:
+            if p.slug != product_slug:
+                 similar_products.append(p)
+
+    context = {'product': product, 'similar_products': similar_products }
 
     return render(request, 'store/product-info.html', context)
 
