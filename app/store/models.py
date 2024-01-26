@@ -1,6 +1,6 @@
 from django.db import models
-
-
+from django.core.validators import FileExtensionValidator
+from django import forms
 from django.urls import reverse
 
 
@@ -47,7 +47,11 @@ class Product(models.Model):
 
     seller = models.CharField(max_length=250)
 
-    image = models.FileField(upload_to='images/')
+    image = models.FileField(upload_to='images/',
+    validators=[
+            FileExtensionValidator(allowed_extensions=['pdf', 'jpeg'])
+            
+        ])
 
 
     class Meta:
