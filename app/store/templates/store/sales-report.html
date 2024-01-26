@@ -40,7 +40,12 @@
 
             <p> <h5> The item with the <b>most number of quantity sold</b> is <b>{{product_name_for_qty}}</b>, at <b>{{total_quantity_sold}}</b> units sold.</h5> </p>
 
-            <p> This is followed by: </p>
+            {% if top_products_info_by_qty %}
+
+                <p> This is followed by: </p>
+
+            {% endif %}
+            
             {% for product_info in top_products_info_by_qty %}
                 <p>
                     {{ product_info.product_name_for_qty }}, {{ product_info.total_quantity_sold }} units sold.
@@ -49,7 +54,12 @@
 
             <p> <h5> The item that <b>earned the most money</b> is <b>{{product_name_for_price}}</b>, at <b>${{total_amount_sold}}</b> raised. </h5> </p>
 
-            <p> This is followed by: </p>
+            {% if top_products_info_by_sold %}
+
+                <p> This is followed by: </p>
+                
+            {% endif %}
+
             {% for product_info in top_products_info_by_sold %}
                 <p>
                     {{ product_info.product_name_for_amt_sold }}, ${{ product_info.total_amt_sold }} raised.
