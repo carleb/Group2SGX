@@ -41,7 +41,6 @@ class Product(models.Model):
 
     seller = models.CharField(max_length=250)
 
-<<<<<<< Updated upstream
     image = models.FileField(upload_to='images/',
     max_length = 5485760 ,
     validators=[
@@ -51,14 +50,7 @@ class Product(models.Model):
             FileNameCharValidator(allowed_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-."),
             
         ])
-=======
-    valid_extensions = ["jpg", "jpeg", "png"]
->>>>>>> Stashed changes
 
-    image = models.FileField(
-        upload_to="images/",
-        validators=[FileExtensionValidator(allowed_extensions=valid_extensions)],
-    )
 
     class Meta:
         verbose_name_plural = "products"
