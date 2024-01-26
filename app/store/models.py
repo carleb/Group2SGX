@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django import forms
+from .validators import FileNameLengthValidator, FileNameCharValidator
 from django.urls import reverse
 
 
@@ -48,8 +49,12 @@ class Product(models.Model):
     seller = models.CharField(max_length=250)
 
     image = models.FileField(upload_to='images/',
+    max_length = 5485760 ,
     validators=[
-            FileExtensionValidator(allowed_extensions=['pdf', 'jpeg'])
+            FileExtensionValidator(allowed_extensions=['.png', 'jpg'],
+            message="Only png and jpg files are allowed"),
+            FileNameLengthValidator(max_length=100),
+            FileNameCharValidator(allowed_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-."),
             
         ])
 
